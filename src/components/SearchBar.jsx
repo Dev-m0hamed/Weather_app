@@ -14,15 +14,18 @@ function SearchBar() {
   const { setData } = useSearchStore();
 
   useEffect(() => {
-    setData({ data, isError });
-  }, [data, isError]);
+    if (data || isError) {
+      setData({ data, isError });
+    }
+  }, [data, isError, setData]);
 
-  const handleSearch = (val = null) => {
-    if (val) setValue(val);
-    else if (search.trim()) setValue(search);
-    setSuggestions([]);
-    setActiveIndex(0);
-    setSearch("");
+  const handleSearch = (val = search) => {
+    if (val.trim()) {
+      setValue(search);
+      setSuggestions([]);
+      setActiveIndex(0);
+      setSearch("");
+    }
   };
 
   const handleChange = async (e) => {
@@ -36,17 +39,21 @@ function SearchBar() {
   const handleKeyDown = (e) => {
     if (e.key === "Enter" && suggestions.length === 0) handleSearch(search);
     if (suggestions.length === 0) return;
-    if (e.key === "ArrowDown") {
-      e.preventDefault();
-      setActiveIndex((prev) => (prev + 1) % suggestions.length);
-    } else if (e.key === "ArrowUp") {
-      e.preventDefault();
-      setActiveIndex(
-        (prev) => (prev - 1 + suggestions.length) % suggestions.length
-      );
-    } else if (e.key === "Enter") {
-      const selected = suggestions[activeIndex];
-      handleSearch(selected.name);
+    switch (e.key) {
+      case "ArrowDown":
+        e.preventDefault();
+        setActiveIndex((prev) => (prev + 1) % suggestions.length);
+        break;
+      case "ArrowUp":
+        e.preventDefault();
+        setActiveIndex(
+          (prev) => (prev - 1 + suggestions.length) % suggestions.length
+        );
+        break;
+      case "Enter":
+        e.preventDefault();
+        handleSearch(suggestions[activeIndex].name);
+        break;
     }
   };
 
