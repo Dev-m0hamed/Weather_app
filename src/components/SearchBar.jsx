@@ -34,7 +34,7 @@ function SearchBar() {
   };
 
   const handleKeyDown = (e) => {
-    if (e.key === "Enter") handleSearch(search);
+    if (e.key === "Enter" && suggestions.length === 0) handleSearch(search);
     if (suggestions.length === 0) return;
     if (e.key === "ArrowDown") {
       e.preventDefault();
