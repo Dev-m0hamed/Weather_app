@@ -1,29 +1,13 @@
-import { useState, useEffect } from "react";
-import useWeather from "../hooks/useWeather";
-import getLocation from "../utils/getLocation";
-import useSearchStore from "../store/useSearchStore";
-import useUnitsStore from "../store/useUnitsStore";
+import useUnitsStore from "../../store/useUnitsStore";
 import WeatherCard from "./WeatherCard";
-import { getWeatherIcon, getWeatherDescription } from "../utils/weatherIcons";
-import { toF } from "../utils/convert";
+import {
+  getWeatherIcon,
+  getWeatherDescription,
+} from "../../utils/weatherIcons";
+import { toF } from "../../utils/convert";
 
-function CurrentWeather({ setError }) {
-  const [location, setLocation] = useState(null);
-  const { data: searchData, isError: searchError } = useSearchStore();
+function CurrentWeather({ data, isLoading, searchError }) {
   const { units } = useUnitsStore();
-
-  useEffect(() => {
-    getLocation((pos) => setLocation(pos));
-  }, []);
-
-  const coords = searchData
-    ? { lat: searchData.latitude, lon: searchData.longitude }
-    : location;
-
-  const { data, isLoading, isError } = useWeather(coords?.lat, coords?.lon);
-  useEffect(() => {
-    setError(isError);
-  }, [isError, setError]);
 
   const formattedDate = data?.current?.time
     ? new Date(data.current.time).toLocaleDateString("en-US", {
@@ -78,7 +62,7 @@ function CurrentWeather({ setError }) {
               <span className="text-neutral-0 text-[96px] font-semibold italic leading-[100%] tracking-[-2%]">
                 {units.windTemp === "C"
                   ? `${Math.round(data?.current.temperature_2m)}°`
-                  : `${(toF(data?.current.temperature_2m))}°`}
+                  : `${toF(data?.current.temperature_2m)}°`}
               </span>
             </div>
           </>

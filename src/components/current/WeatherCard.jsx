@@ -1,5 +1,5 @@
-import useUnitsStore from "../store/useUnitsStore";
-import { toF, kmhToMph, mmToInch } from "../utils/convert";
+import useUnitsStore from "../../store/useUnitsStore";
+import { toF, kmhToMph, mmToInch } from "../../utils/convert";
 
 function WeatherCard({ data, isLoading }) {
   const { units } = useUnitsStore();

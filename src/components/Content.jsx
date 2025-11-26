@@ -1,10 +1,26 @@
-import { useState } from "react";
-import SearchBar from "./SearchBar";
-import CurrentWeather from "./CurrentWeather";
+import { useState, useEffect } from "react";
+import useSearchStore from "../store/useSearchStore";
+import useWeather from "../hooks/useWeather";
+import getLocation from "../utils/getLocation";
+import SearchBar from "./searchbar/SearchBar";
+import CurrentWeather from "./current/CurrentWeather";
+import DailyForecast from "./daily/DailyForecast";
 
 function Content() {
-  const [error, setError] = useState(false);
-  return error ? (
+  const [location, setLocation] = useState(null);
+  const { data: searchData, isError: searchError } = useSearchStore();
+
+  useEffect(() => {
+    getLocation((pos) => setLocation(pos));
+  }, []);
+
+  const coords = searchData
+    ? { lat: searchData.latitude, lon: searchData.longitude }
+    : location;
+
+  const { data, isLoading, isError } = useWeather(coords?.lat, coords?.lon);
+
+  return isError ? (
     <section className="flex flex-col items-center gap-6 pt-10 text-center">
       <svg
         xmlns="http://www.w3.org/2000/svg"
@@ -25,8 +41,10 @@ function Content() {
         We couldn’t connect to the server (API error). Please try again in a few
         moments.
       </p>
-      <div className="flex gap-2.5 py-3 px-4 rounded-lg bg-neutral-800 text-neutral-0 cursor-pointer"
-      onClick={() => window.location.reload()}>
+      <div
+        className="flex gap-2.5 py-3 px-4 rounded-lg bg-neutral-800 text-neutral-0 cursor-pointer"
+        onClick={() => window.location.reload()}
+      >
         <svg
           xmlns="http://www.w3.org/2000/svg"
           width="16"
@@ -47,9 +65,14 @@ function Content() {
       <h1 className="font-bricolage text-[52px] leading-[120%] font-bold text-neutral-0 text-center mx-auto md:max-w-[482px] lg:max-w-max">
         How’s the sky looking today?
       </h1>
-      <main className="flex flex-col gap-8">
+      <main className="flex flex-col gap-8 lg:gap-12">
         <SearchBar />
-        <CurrentWeather setError={setError} />
+        <CurrentWeather
+          data={data}
+          isLoading={isLoading}
+          searchError={searchError}
+        />
+        <DailyForecast />
       </main>
     </>
   );

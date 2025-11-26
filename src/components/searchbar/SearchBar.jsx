@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
-import useSearch from "../hooks/useSearch";
-import debounce from "../hooks/debounce";
-import useSearchStore from "../store/useSearchStore";
+import useSearch from "../../hooks/useSearch";
+import debounce from "../../hooks/debounce";
+import useSearchStore from "../../store/useSearchStore";
 import Suggestions from "./Suggestions";
 
 function SearchBar() {
