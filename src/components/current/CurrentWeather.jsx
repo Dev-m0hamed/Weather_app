@@ -44,7 +44,7 @@ function CurrentWeather({ data, isLoading, searchError }) {
           <>
             <div className="flex flex-col items-center gap-3 text-neutral-0">
               <h2 className="font-bold text-[28px] leading-[120%]">
-                {`${data?.name}, ${data?.country}`}
+                {`${data?.name ? data?.name : data?.country}, ${data?.country}`}
               </h2>
               <time
                 className="opacity-80 font-medium text-[18px] leading-[120%]"
