@@ -2,7 +2,7 @@ import { useState, useEffect } from "react";
 import useWeather from "../hooks/useWeather";
 import getLocation from "../utils/getLocation";
 import useSearchStore from "../store/useSearchStore";
-import sunny from "../assets/images/icon-sunny.webp";
+import { getWeatherIcon, getWeatherDescription } from "../utils/weatherIcons";
 
 function CurrentWeather() {
   const [location, setLocation] = useState(null);
@@ -17,7 +17,15 @@ function CurrentWeather() {
     : location || { lat: 30.06263, lon: 31.24967 };
 
   const { data } = useWeather(coords.lat, coords.lon);
-  console.log(data)
+
+  const formattedDate = data?.current?.time
+    ? new Date(data.current.time).toLocaleDateString("en-US", {
+        weekday: "long",
+        month: "short",
+        day: "numeric",
+        year: "numeric",
+      })
+    : "";
 
   return searchError ? (
     <h2 className="font-bold text-[28px] leading-[120%] text-neutral-0 mx-auto">
@@ -32,13 +40,17 @@ function CurrentWeather() {
           </h2>
           <time
             className="opacity-80 font-medium text-[18px] leading-[120%]"
-            dateTime=""
+            dateTime={data?.current?.time}
           >
-            Tuesday, Aug 5, 2025
+            {formattedDate}
           </time>
         </div>
         <div className="flex items-center gap-5">
-          <img src={sunny} alt="sunny" className="size-[120px]" />
+          <img
+            src={getWeatherIcon(data?.current.weather_code)}
+            alt={getWeatherDescription(data?.current.weather_code)}
+            className="size-[120px]"
+          />
           <span className="text-neutral-0 text-[96px] font-semibold italic leading-[100%] tracking-[-2%]">
             {Math.round(data?.current?.temperature_2m)}°
           </span>
@@ -58,7 +70,7 @@ function CurrentWeather() {
             Humidity
           </span>
           <span className="text-neutral-0 text-[32px] font-light leading-[100%]">
-            46%
+            {data?.current.relative_humidity_2m}%
           </span>
         </div>
         <div className="flex flex-col gap-6 p-5 rounded-xl bg-neutral-800 border border-neutral-600">
@@ -66,7 +78,7 @@ function CurrentWeather() {
             Wind
           </span>
           <span className="text-neutral-0 text-[32px] font-light leading-[100%]">
-            14 km/h
+            {data?.current.wind_speed_10m} km/h
           </span>
         </div>
         <div className="flex flex-col gap-6 p-5 rounded-xl bg-neutral-800 border border-neutral-600">
@@ -74,7 +86,7 @@ function CurrentWeather() {
             Precipitation
           </span>
           <span className="text-neutral-0 text-[32px] font-light leading-[100%]">
-            0 mm
+            {data?.hourly.precipitation[0]} mm
           </span>
         </div>
       </article>
