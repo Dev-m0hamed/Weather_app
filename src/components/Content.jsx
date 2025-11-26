@@ -72,7 +72,7 @@ function Content() {
           isLoading={isLoading}
           searchError={searchError}
         />
-        <DailyForecast />
+        <DailyForecast data={data} />
       </main>
     </>
   );

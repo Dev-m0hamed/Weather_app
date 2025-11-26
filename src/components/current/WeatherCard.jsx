@@ -34,7 +34,7 @@ function WeatherCard({ data, isLoading }) {
         <div
           key={item.title}
           className={`flex flex-col gap-6 p-5 rounded-xl bg-neutral-800 border border-neutral-600 ${
-            isLoading && "animate-pulse"
+            isLoading || !data ? "animate-pulse" : ""
           }`}
         >
           <span className="text-neutral-200 text-[18px] font-medium leading-[120%]">
