@@ -5,6 +5,7 @@ import getLocation from "../utils/getLocation";
 import SearchBar from "./searchbar/SearchBar";
 import CurrentWeather from "./current/CurrentWeather";
 import DailyForecast from "./daily/DailyForecast";
+import HourlyForecast from "./hourly/HourlyForecast";
 
 function Content() {
   const [location, setLocation] = useState(null);
@@ -67,12 +68,19 @@ function Content() {
       </h1>
       <main className="flex flex-col gap-8 lg:gap-12">
         <SearchBar />
-        <CurrentWeather
-          data={data}
-          isLoading={isLoading}
-          searchError={searchError}
-        />
-        <DailyForecast data={data} />
+        <div className="grid gap-8 xl:grid-cols-[minmax(0,800px)_1fr] xl:gap-8">
+          <div className="flex flex-col gap-8 xl:order-1">
+            <CurrentWeather
+              data={data}
+              isLoading={isLoading}
+              searchError={searchError}
+            />
+            <DailyForecast data={data} />
+          </div>
+          <div className="xl:order-2 xl:h-full">
+            <HourlyForecast data={data} />
+          </div>
+        </div>
       </main>
     </>
   );
