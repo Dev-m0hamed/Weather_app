@@ -6,6 +6,12 @@ function getLocation(callback) {
         lon: p.coords.longitude,
       });
     },
+    () => {
+      callback({
+        lat: 30.06263,
+        lon: 31.24967,
+      });
+    }
   );
 }
 

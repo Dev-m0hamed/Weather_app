@@ -12,7 +12,6 @@ function Header() {
     }
   };
   return (
-    <>
       <header className="flex items-center justify-between">
         <svg
           className="w-[137.9px] h-7 md:w-[186.86px] md:h-10"
@@ -77,10 +76,6 @@ function Header() {
           <AnimatePresence>{drop && <DropMenu />}</AnimatePresence>
         </div>
       </header>
-      <h1 className="font-bricolage text-[52px] leading-[120%] font-bold text-neutral-0 text-center mx-auto md:max-w-[482px] lg:max-w-max">
-        How’s the sky looking today?
-      </h1>
-    </>
   );
 }
 

@@ -1,9 +1,5 @@
 export function toF(c) {
-  return (c * 9) / 5 + 32;
-}
-
-export function toC(f) {
-  return ((f - 32) * 5) / 9;
+  return Math.round((c * 9) / 5 + 32);
 }
 
 export function kmhToMph(v) {
@@ -11,5 +7,5 @@ export function kmhToMph(v) {
 }
 
 export function mmToInch(mm) {
-  return mm / 25.4;
+  return Math.round((mm / 25.4));
 }
