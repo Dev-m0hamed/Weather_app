@@ -3,9 +3,9 @@ import { useState } from "react";
 import DropMenu from "./DropMenu";
 
 function Header() {
-  const [drop, setDrop] = useState(false);
-
-  const handleKey = (e) => {
+    const [drop, setDrop] = useState(false);
+    
+  const handleKey = (e: React.KeyboardEvent<HTMLDivElement>) => {
     if (e.key === "Enter" || e.key === " ") {
       e.preventDefault();
       setDrop(!drop);

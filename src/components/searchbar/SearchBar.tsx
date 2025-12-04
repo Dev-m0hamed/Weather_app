@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
 import useSearch from "../../hooks/useSearch";
 import debounce from "../../hooks/debounce";
+import type { Results } from "../../hooks/debounce";
 import useSearchStore from "../../store/useSearchStore";
 import Suggestions from "./Suggestions";
 
@@ -8,7 +9,7 @@ function SearchBar() {
   const [search, setSearch] = useState("");
   const [value, setValue] = useState("");
   const [activeIndex, setActiveIndex] = useState(0);
-  const [suggestions, setSuggestions] = useState([]);
+  const [suggestions, setSuggestions] = useState<Results[]>([]);
 
   const { data, isLoading, isError } = useSearch(value);
   const { setData } = useSearchStore();
@@ -28,7 +29,7 @@ function SearchBar() {
     }
   };
 
-  const handleChange = async (e) => {
+  const handleChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
     setSearch(e.target.value);
     if (e.target.value.trim()) {
       const result = await debounce(e.target.value);
@@ -36,7 +37,7 @@ function SearchBar() {
     }
   };
 
-  const handleKeyDown = (e) => {
+  const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
     if (e.key === "Enter" && suggestions.length === 0) handleSearch(search);
     if (suggestions.length === 0) return;
     switch (e.key) {

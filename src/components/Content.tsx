@@ -2,13 +2,14 @@ import { useState, useEffect } from "react";
 import useSearchStore from "../store/useSearchStore";
 import useWeather from "../hooks/useWeather";
 import getLocation from "../utils/getLocation";
+import type { Location } from "../utils/getLocation";
 import SearchBar from "./searchbar/SearchBar";
 import CurrentWeather from "./current/CurrentWeather";
 import DailyForecast from "./daily/DailyForecast";
 import HourlyForecast from "./hourly/HourlyForecast";
 
 function Content() {
-  const [location, setLocation] = useState(null);
+  const [location, setLocation] = useState<Location | null>(null);
   const { data: searchData, isError: searchError } = useSearchStore();
 
   useEffect(() => {

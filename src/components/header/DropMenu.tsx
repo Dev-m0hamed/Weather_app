@@ -1,15 +1,20 @@
 import { motion } from "motion/react";
 import { Fragment } from "react";
 import Group from "./Group";
+import type { Units } from "../../store/useUnitsStore";
 import useUnitsStore from "../../store/useUnitsStore";
 
 function Dropdown() {
-  const metric = { windTemp: "C", windSpeed: "kmh", precipitation: "mm" };
-  const imperial = { windTemp: "F", windSpeed: "mph", precipitation: "inch" };
+  const metric: Units = { temp: "C", speed: "kmh", precipitation: "mm" };
+  const imperial: Units = { temp: "F", speed: "mph", precipitation: "inch" };
 
-  const unitSetting = [
+  const unitSetting: {
+    key: keyof Units;
+    title: string;
+    options: { label: string; value: Units[keyof Units] }[];
+  }[] = [
     {
-      key: "windTemp",
+      key: "temp",
       title: "Wind Temperature",
       options: [
         { label: "Celsius (°C)", value: "C" },
@@ -17,7 +22,7 @@ function Dropdown() {
       ],
     },
     {
-      key: "windSpeed",
+      key: "speed",
       title: "Wind Speed",
       options: [
         { label: "km/h", value: "kmh" },
@@ -37,9 +42,7 @@ function Dropdown() {
   const { units, setUnits } = useUnitsStore();
 
   const isMetric =
-    units.windTemp === "C" &&
-    units.windSpeed === "kmh" &&
-    units.precipitation === "mm";
+    units.temp === "C" && units.speed === "kmh" && units.precipitation === "mm";
 
   return (
     <motion.ul

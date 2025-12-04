@@ -28,7 +28,7 @@ const weatherDescriptions = {
   99: "Severe thunderstorm",
 };
 
-export const getWeatherIcon = (code) => {
+export const getWeatherIcon = (code: number) => {
   if (code === 0 || code === 1) return sunnyIcon;
   if (code === 2) return iconPartlyCloudy;
   if (code === 3) return iconCloudy;
@@ -40,6 +40,6 @@ export const getWeatherIcon = (code) => {
   return sunnyIcon;
 };
 
-export const getWeatherDescription = (code) => {
-  return weatherDescriptions[code] || "Unknown";
+export const getWeatherDescription = (code: number) => {
+  return weatherDescriptions[code as keyof typeof weatherDescriptions] || "Unknown";
 };

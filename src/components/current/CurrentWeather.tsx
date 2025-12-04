@@ -1,12 +1,19 @@
 import useUnitsStore from "../../store/useUnitsStore";
 import WeatherCard from "./WeatherCard";
+import type { Data } from "../../api/weather";
 import {
   getWeatherIcon,
   getWeatherDescription,
 } from "../../utils/weatherIcons";
 import { toF } from "../../utils/convert";
 
-function CurrentWeather({ data, isLoading, searchError }) {
+type CurrentWeatherProps = {
+  data: Data | undefined;
+  isLoading: boolean;
+  searchError: boolean;
+};
+
+function CurrentWeather({ data, isLoading, searchError }: CurrentWeatherProps) {
   const { units } = useUnitsStore();
 
   const formattedDate = data?.current?.time
@@ -60,7 +67,7 @@ function CurrentWeather({ data, isLoading, searchError }) {
                 className="size-[120px]"
               />
               <span className="text-neutral-0 text-[96px] font-semibold italic leading-[100%] tracking-[-2%]">
-                {units.windTemp === "C"
+                {units.temp === "C"
                   ? `${Math.round(data?.current.temperature_2m)}°`
                   : `${toF(data?.current.temperature_2m)}°`}
               </span>

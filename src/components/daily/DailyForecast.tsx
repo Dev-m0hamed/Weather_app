@@ -4,8 +4,9 @@ import {
 } from "../../utils/weatherIcons";
 import useUnitsStore from "../../store/useUnitsStore";
 import { toF } from "../../utils/convert";
+import type { Data } from "../../api/weather";
 
-function DailyForecast({ data }) {
+function DailyForecast({ data }: { data: Data | undefined }) {
   const { units } = useUnitsStore();
   const days = data?.daily?.time || Array(7).fill(null);
 
@@ -52,14 +53,14 @@ function DailyForecast({ data }) {
                   }`}
                 >
                   {data
-                    ? units.windTemp === "C"
+                    ? units.temp === "C"
                       ? `${Math.round(data?.daily.temperature_2m_max[i])}°`
                       : `${toF(data?.daily.temperature_2m_max[i])}°`
                     : "_"}
                 </span>
                 <span className="font-medium text-[16px] text-neutral-200 leading-[120%]">
                   {data
-                    ? units.windTemp === "C"
+                    ? units.temp === "C"
                       ? `${Math.round(data?.daily.temperature_2m_min[i])}°`
                       : `${toF(data?.daily.temperature_2m_min[i])}°`
                     : ""}

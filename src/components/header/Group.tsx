@@ -1,6 +1,14 @@
+import type { Units } from "../../store/useUnitsStore";
 import useUnitsStore from "../../store/useUnitsStore";
 
-function Group({ unit, title, options, selected }) {
+type GroupProps = {
+  unit: keyof Units;
+  title: string;
+  options: { label: string; value: Units[keyof Units] }[];
+  selected: Units[keyof Units];
+};
+
+function Group({ unit, title, options, selected }: GroupProps) {
   const { units, setUnits } = useUnitsStore();
   return (
     <li className="flex flex-col gap-2">
@@ -11,7 +19,7 @@ function Group({ unit, title, options, selected }) {
         {options.map((opt) => (
           <button
             key={opt.value}
-            onClick={() => setUnits({ ...units, [unit]: opt.value})}
+            onClick={() => setUnits({ ...units, [unit]: opt.value })}
             className={`py-2.5 px-2 rounded-lg cursor-pointer font-medium text-[16px] leading-[120%] text-neutral-0 flex items-center justify-between transition duration-300
               ${
                 selected === opt.value

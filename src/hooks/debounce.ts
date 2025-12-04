@@ -1,6 +1,15 @@
-let timer;
+export interface Results {
+  id: number;
+  name: string;
+  country: string;
+}
 
-function debounce(value) {
+interface GeocodingResult {
+  results: Results[];
+}
+
+let timer: number;
+function debounce(value: string): Promise<Results[]> {
   clearTimeout(timer);
   return new Promise((resolve) => {
     timer = setTimeout(async () => {
@@ -8,7 +17,7 @@ function debounce(value) {
         const res = await fetch(
           `https://geocoding-api.open-meteo.com/v1/search?name=${value}&count=5&language=en&format=json`
         );
-        const data = await res.json();
+        const data: GeocodingResult = await res.json();
         resolve(data.results || []);
       } catch {
         resolve([]);

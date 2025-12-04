@@ -1,4 +1,9 @@
-function getLocation(callback) {
+export interface Location {
+  lat: number;
+  lon: number;
+}
+
+function getLocation(callback: (location: Location) => void) {
   navigator.geolocation.getCurrentPosition(
     (p) => {
       callback({

@@ -6,10 +6,18 @@ import {
 import useUnitsStore from "../../store/useUnitsStore";
 import { toF } from "../../utils/convert";
 import { motion, AnimatePresence } from "motion/react";
+import type { Data } from "../../api/weather";
 
-function HourlyForecast({ data }) {
+type HourData = {
+  time: string;
+  hour: number;
+  temperature: number;
+  weatherCode: number;
+};
+
+function HourlyForecast({ data }: { data: Data | undefined }) {
   const [isOpen, setIsOpen] = useState(false);
-  const [selectedDay, setSelectedDay] = useState(null);
+  const [selectedDay, setSelectedDay] = useState<string | null>(null);
   const { units } = useUnitsStore();
 
   const now = new Date();
@@ -21,7 +29,6 @@ function HourlyForecast({ data }) {
       return {
         dateStr: dateStr,
         dayName: date.toLocaleDateString("en-US", { weekday: "long" }),
-        fullDate: date,
       };
     }) || [];
 
@@ -30,41 +37,41 @@ function HourlyForecast({ data }) {
     availableDays.find((d) => d.dateStr === currentDay)?.dayName ||
     new Date().toLocaleDateString("en-US", { weekday: "long" });
 
-  const upcomingHours = data?.hourly.time
-    .map((time, i) => {
-      const timeDate = new Date(time);
-      const timeDateStr = time.split("T")[0];
-      if (currentDay === todayStr) {
-        if (timeDate >= now) {
-          return {
-            time: time,
-            hour: timeDate.getHours(),
-            temperature: data.hourly.temperature_2m[i],
-            weatherCode: data.hourly.weather_code[i],
-          };
-        }
-      } else if (timeDateStr === currentDay) {
-        return {
-          time: time,
-          hour: timeDate.getHours(),
-          temperature: data.hourly.temperature_2m[i],
-          weatherCode: data.hourly.weather_code[i],
-        };
-      }
-      return null;
-    })
-    .filter(Boolean)
-    .slice(0, 24);
+  const upcomingHours: (HourData | null)[] = data?.hourly.time
+    ? data.hourly.time
+        .map((time, i) => {
+          const timeDate = new Date(time);
+          const timeDateStr = time.split("T")[0];
+          if (currentDay === todayStr) {
+            if (timeDate >= now) {
+              return {
+                time: time,
+                hour: timeDate.getHours(),
+                temperature: data.hourly.temperature_2m[i],
+                weatherCode: data.hourly.weather_code[i],
+              };
+            }
+          } else if (timeDateStr === currentDay) {
+            return {
+              time: time,
+              hour: timeDate.getHours(),
+              temperature: data.hourly.temperature_2m[i],
+              weatherCode: data.hourly.weather_code[i],
+            };
+          }
+          return null;
+        })
+        .filter((item) => item !== null)
+        .slice(0, 24)
+    : Array(8).fill(null);
 
-  const formatHour = (hour) => {
+  const formatHour = (hour: number) => {
     const period = hour >= 12 ? "PM" : "AM";
     const displayHour = hour % 12 || 12;
     return `${displayHour} ${period}`;
   };
 
-  const hours = upcomingHours || Array(8).fill(null);
-
-  const handleDaySelect = (dayStr) => {
+  const handleDaySelect = (dayStr: string) => {
     setSelectedDay(dayStr);
     setIsOpen(false);
   };
@@ -126,13 +133,13 @@ function HourlyForecast({ data }) {
         </div>
       </div>
       <div className="grid gap-4 overflow-y-auto h-[600px] px-4 md:px-6 [&::-webkit-scrollbar]:w-1.5 [&::-webkit-scrollbar-track]:bg-transparent [&::-webkit-scrollbar-thumb]:bg-neutral-700 [&::-webkit-scrollbar-thumb]:rounded-full">
-        {hours?.map((hourDate, i) => (
+        {upcomingHours.map((hourDate, i) => (
           <div
-            key={upcomingHours ? hourDate.time : i}
+            key={hourDate ? hourDate.time : i}
             className="flex items-center justify-between py-2.5 pl-3 pr-4 rounded-lg bg-neutral-700 border border-neutral-600"
           >
             <div className="flex items-center">
-              {upcomingHours && (
+              {hourDate && (
                 <img
                   src={getWeatherIcon(hourDate.weatherCode)}
                   alt={getWeatherDescription(hourDate.weatherCode)}
@@ -140,12 +147,12 @@ function HourlyForecast({ data }) {
                 />
               )}
               <span className="text-[20px] font-medium leading-[120%] text-neutral-0">
-                {upcomingHours ? formatHour(hourDate.hour) : ""}
+                {hourDate ? formatHour(hourDate.hour) : ""}
               </span>
             </div>
             <span className="text-neutral-0 text-[16px] font-medium leading-[120%]">
-              {upcomingHours
-                ? units.windTemp === "C"
+              {hourDate
+                ? units.temp === "C"
                   ? `${Math.round(hourDate.temperature)}°`
                   : `${toF(hourDate.temperature)}°`
                 : ""}

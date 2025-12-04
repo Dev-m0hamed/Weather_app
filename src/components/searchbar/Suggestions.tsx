@@ -1,6 +1,19 @@
 import { Fragment } from "react";
+import type { Results } from "../../hooks/debounce";
 
-function Suggestions({ setSearch, activeIndex, suggestions, handleSearch }) {
+interface SuggestionsProps {
+  setSearch: (val: string) => void;
+  activeIndex: number;
+  suggestions: Results[];
+  handleSearch: (val?: string) => void;
+}
+
+function Suggestions({
+  setSearch,
+  activeIndex,
+  suggestions,
+  handleSearch,
+}: SuggestionsProps) {
   return (
     <ul className="absolute z-20 flex flex-col gap-1 p-2 rounded-xl bg-neutral-800 border border-neutral-700 left-0 right-0 top-full mt-3">
       {suggestions.map((sug, i) => (

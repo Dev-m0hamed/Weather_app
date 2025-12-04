@@ -1,30 +1,42 @@
 import useUnitsStore from "../../store/useUnitsStore";
 import { toF, kmhToMph, mmToInch } from "../../utils/convert";
+import type { Data } from "../../api/weather";
 
-function WeatherCard({ data, isLoading }) {
+type WeatherCardProps = {
+  data: Data | undefined;
+  isLoading: boolean;
+};
+
+function WeatherCard({ data, isLoading }: WeatherCardProps) {
   const { units } = useUnitsStore();
   const current = [
     {
       title: "Feels Like",
-      value:
-        units.windTemp === "C"
-          ? `${Math.round(data?.current.temperature_2m)}°`
-          : `${toF(data?.current.temperature_2m)}°`,
+      value: data
+        ? units.temp === "C"
+          ? `${Math.round(data.current.temperature_2m)}°`
+          : `${toF(data.current.temperature_2m)}°`
+        : "",
     },
-    { title: "Humidity", value: `${data?.current.relative_humidity_2m}%` },
+    {
+      title: "Humidity",
+      value: data ? `${data.current.relative_humidity_2m}%` : "",
+    },
     {
       title: "Wind",
-      value:
-        units.windSpeed === "kmh"
-          ? `${Math.round(data?.current.wind_speed_10m)} km/h`
-          : `${Math.round(kmhToMph(data?.current.wind_speed_10m))} mph`,
+      value: data
+        ? units.speed === "kmh"
+          ? `${Math.round(data.current.wind_speed_10m)} km/h`
+          : `${Math.round(kmhToMph(data.current.wind_speed_10m))} mph`
+        : "",
     },
     {
       title: "Precipitation",
-      value:
-        units.precipitation === "mm"
-          ? `${data?.hourly.precipitation[0]} mm`
-          : `${mmToInch(data?.hourly.precipitation[0])} in`,
+      value: data
+        ? units.precipitation === "mm"
+          ? `${data.hourly.precipitation[0]} mm`
+          : `${mmToInch(data.hourly.precipitation[0])} in`
+        : "",
     },
   ];
 
